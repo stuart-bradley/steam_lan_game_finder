@@ -1,7 +1,8 @@
-from django.test import TestCase, SimpleTestCase
+from django.test import TestCase
 from game_finder.steam_api_wrapper.steam_api_wrapper import *
 
-class SteamAPIWrapperTestCase(SimpleTestCase):
+
+class SteamAPIWrapperTestCase(TestCase):
 
     def test_convert_to_steam_ids(self):
         user_strings_valid = ['darkstarone93',
