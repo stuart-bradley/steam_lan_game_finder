@@ -11,9 +11,13 @@ import uuid
 class Migration(migrations.Migration):
 
     def forward(apps, schema_editor):
+        """ Generates Game and Tag entities from the SteamSpy
+        and SteamStore APIs.
+        """
         print()
 
         def get_json_response(url):
+            """ Returns a JSON response and handles errors. """
             try:
                 response = requests.get(url)
                 response.raise_for_status()
@@ -24,14 +28,15 @@ class Migration(migrations.Migration):
                 return None
 
         def get_price(appid):
-            content = get_json_response(
+            """ Attempts to get price data for a game from the Steam Store. """
+            price_content = get_json_response(
                 "http://store.steampowered.com/api/appdetails?appids={}&cc=us".format(appid))
             try:
-                if content:
-                    if content[str(appid)]["data"]["is_free"]:
+                if price_content:
+                    if price_content[str(appid)]["data"]["is_free"]:
                         return Decimal('0.00')
-
                     price_string = str(content[str(appid)]["data"]["price_overview"]["initial"])
+                    # String must have it's decimal added.
                     return Decimal(price_string[:-2] + "." + price_string[-2:])
                 else:
                     return Decimal('-1.0')
@@ -40,19 +45,13 @@ class Migration(migrations.Migration):
 
         Game = apps.get_model("game_finder", "Game")
         Tag = apps.get_model("game_finder", "Tag")
-        multiplayer_tags = {'Multiplayer' : None, 'Local Multiplayer' : None,
-                            'Co-Op' : None, 'Co-op' : None,
-                            'Online Co-Op' : None, 'Local Co-Op' : None,
-                            'Massively Multiplayer' : None}
+        multiplayer_tags = {'Multiplayer', 'Local Multiplayer',
+                            'Co-Op', 'Co-op',
+                            'Online Co-Op', 'Local Co-Op',
+                            'Massively Multiplayer'}
+        all_tags = {}
 
-        # Generate multi-player tags
-        print("Generating Tags.")
-        for item in multiplayer_tags.keys():
-            tag = Tag(name=item)
-            tag.save()
-            multiplayer_tags[item] = tag
-
-        print("Generating Games.")
+        print("Generating Games and Tags.")
         content = get_json_response("https://steamspy.com/api.php?request=all")
 
         if content:
@@ -60,17 +59,32 @@ class Migration(migrations.Migration):
                 print(appid)
                 if game_data['tags']:
                     game_tags = game_data['tags'].keys()
-                    game_multiplayer_tags = game_tags & multiplayer_tags.keys()
+                    game_multiplayer_tags = game_tags & multiplayer_tags
+                    missing_tags = game_tags - all_tags.keys()
+                    # Creates tags as needed.
+                    for item in missing_tags:
+                        if item in multiplayer_tags:
+                            tag = Tag(name=item, is_multiplayer=True)
+                        else:
+                            tag = Tag(name=item)
+                        tag.save()
+                        all_tags[item] = tag
+                    # Creates Games.
+                    game_name = game_data["name"]
                     if len(game_multiplayer_tags) > 0:
                         price = get_price(appid)
-                        game_name = game_data["name"]
-                        game = Game(appid=int(appid),title=game_name,price=price)
+                        game = Game(appid=int(appid),title=game_name,price=price, is_multiplayer=True)
                         game.save()
-                        for key in game_multiplayer_tags:
-                            game.tags.add(multiplayer_tags[key])
+                    else:
+                        game = Game(appid=int(appid), title=game_name)
                         game.save()
+                    for key in game_tags:
+                        game.tags.add(all_tags[key])
+                    game.save()
+
 
     def backward(apps, schema_editor):
+        """ Deletes all Game and Tag entries. """
         Game = apps.get_model("game_finder", "Game")
         Tag = apps.get_model("game_finder", "Tag")
 
