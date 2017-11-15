@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import environ
+import sys
 
 env = environ.Env(DEBUG=(bool, False),) # set default values and casting
 environ.Env.read_env() # reading .env file
@@ -94,6 +95,12 @@ WSGI_APPLICATION = 'steam_lan_game_finder.wsgi.application'
 DATABASES = {
     'default': env.db()
 }
+
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'test_data_base'
+    }
 
 
 # Password validation

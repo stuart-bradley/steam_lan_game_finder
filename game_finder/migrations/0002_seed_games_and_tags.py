@@ -3,9 +3,8 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-import requests
-from decimal import Decimal
-from time import sleep
+from game_finder.steam_api_wrapper.steam_api_wrapper import (get_json_response,
+get_price)
 
 
 class Migration(migrations.Migration):
@@ -15,34 +14,6 @@ class Migration(migrations.Migration):
         and SteamStore APIs.
         """
         print()
-
-        def get_json_response(url):
-            """ Returns a JSON response and handles errors. """
-            try:
-                response = requests.get(url)
-                response.raise_for_status()
-                return response.json()
-            except Exception as e:
-                print("Skipping {}".format(url))
-                print(e)
-                return None
-
-        def get_price(appid):
-            """ Attempts to get price data for a game from the Steam Store. """
-            sleep(1) # Sleep to stop failed API requests.
-            price_content = get_json_response(
-                "http://store.steampowered.com/api/appdetails?appids={}&cc=us".format(appid))
-            try:
-                if price_content:
-                    if price_content[str(appid)]["data"]["is_free"]:
-                        return Decimal('0.00')
-                    price_string = str(content[str(appid)]["data"]["price_overview"]["initial"])
-                    # String must have it's decimal added.
-                    return Decimal(price_string[:-2] + "." + price_string[-2:])
-                else:
-                    return Decimal('-1.0')
-            except KeyError as e:
-                return Decimal('-1.0')
 
         Game = apps.get_model("game_finder", "Game")
         Tag = apps.get_model("game_finder", "Tag")
@@ -60,6 +31,8 @@ class Migration(migrations.Migration):
             counter = 0
             for appid, game_data in content.items():
                 counter += 1
+                game_tags = []
+                game_multiplayer_tags = []
                 if game_data['tags']:
                     game_tags = game_data['tags'].keys()
                     game_multiplayer_tags = game_tags & multiplayer_tags
@@ -73,19 +46,19 @@ class Migration(migrations.Migration):
                             tag = Tag(name=item)
                         tag.save()
                         all_tags[item] = tag
-                    # Creates Games.
-                    game_name = game_data["name"]
-                    print("Creating Game: {} ({}/{})".format(game_name, counter, items_len))
-                    if len(game_multiplayer_tags) > 0:
-                        price = get_price(appid)
-                        game = Game(appid=int(appid),title=game_name,price=price, is_multiplayer=True)
-                        game.save()
-                    else:
-                        game = Game(appid=int(appid), title=game_name)
-                        game.save()
-                    for key in game_tags:
-                        game.tags.add(all_tags[key])
+                # Creates Games.
+                game_name = game_data["name"]
+                print("Creating Game: {} ({}/{})".format(game_name, counter, items_len))
+                if len(game_multiplayer_tags) > 0:
+                    price = get_price(appid)
+                    game = Game(appid=int(appid),title=game_name,price=price, is_multiplayer=True)
                     game.save()
+                else:
+                    game = Game(appid=int(appid), title=game_name)
+                    game.save()
+                for key in game_tags:
+                    game.tags.add(all_tags[key])
+                game.save()
 
 
     def backward(apps, schema_editor):
