@@ -3,8 +3,7 @@ import uuid
 from .tag import Tag
 
 class Game(models.Model):
-    appid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    appid = models.IntegerField(primary_key=True, editable=False)
     title = models.CharField(max_length=200)
-    is_multiplayer = models.BooleanField()
-    price = models.DecimalField(decimal_places=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
     tags = models.ManyToManyField(Tag)
