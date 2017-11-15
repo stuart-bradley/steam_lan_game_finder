@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from django.db import migrations
 import requests
 from decimal import Decimal
-import uuid
+from time import sleep
 
 
 class Migration(migrations.Migration):
@@ -29,6 +29,7 @@ class Migration(migrations.Migration):
 
         def get_price(appid):
             """ Attempts to get price data for a game from the Steam Store. """
+            sleep(1) # Sleep to stop failed API requests.
             price_content = get_json_response(
                 "http://store.steampowered.com/api/appdetails?appids={}&cc=us".format(appid))
             try:
@@ -55,14 +56,17 @@ class Migration(migrations.Migration):
         content = get_json_response("https://steamspy.com/api.php?request=all")
 
         if content:
+            items_len = len(content.keys())
+            counter = 0
             for appid, game_data in content.items():
-                print(appid)
+                counter += 1
                 if game_data['tags']:
                     game_tags = game_data['tags'].keys()
                     game_multiplayer_tags = game_tags & multiplayer_tags
                     missing_tags = game_tags - all_tags.keys()
                     # Creates tags as needed.
                     for item in missing_tags:
+                        print("Creating Tag: {}".format(item))
                         if item in multiplayer_tags:
                             tag = Tag(name=item, is_multiplayer=True)
                         else:
@@ -71,6 +75,7 @@ class Migration(migrations.Migration):
                         all_tags[item] = tag
                     # Creates Games.
                     game_name = game_data["name"]
+                    print("Creating Game: {} ({}/{})".format(game_name, counter, items_len))
                     if len(game_multiplayer_tags) > 0:
                         price = get_price(appid)
                         game = Game(appid=int(appid),title=game_name,price=price, is_multiplayer=True)
