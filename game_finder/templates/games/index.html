@@ -5,11 +5,26 @@
         <div class="col mt-5">
             <form method="GET">
                 <div class="form-group">
-                    <label for="user_strings">Steam IDs</label>
                     <input type="text" class="form-control" id="user_strings" aria-describedby="user_strings_help"
                            placeholder="Enter comma seperated Steam IDs">
                     <small id="user_strings_help" class="form-text text-muted">
-                        Input two or more steam64 IDs or custom urls separated by commas.
+                        Input two or more steam IDs in any format separated by commas, e.g:
+                        <ul>
+                            <li><i>Custom url</i>:
+                                <ul>
+                                    <li>darkstarone93</li>
+                                    <li>https://steamcommunity.com/id/darkstarone93</li>
+                                </ul>
+                            </li>
+                            <li><i>Steam ID 64</i>:
+                                <ul>
+                                    <li>76561198011864860</li>
+                                    <li>http://steamcommunity.com/profiles/76561198011864860</li>
+                                </ul>
+                            </li>
+                            <li><i>Steam ID 3</i>: [U:1:51599132]</li>
+                            <li><i>Steam ID</i>: STEAM_0:0:25799566</li>
+                        </ul>
                     </small>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">
