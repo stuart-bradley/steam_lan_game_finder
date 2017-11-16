@@ -32,7 +32,10 @@ def convert_to_steam_ids(user_strings):
     """
     steam_ids = OrderedDict()
     for user_string in user_strings:
-        steam_ids[user_string] = convert_to_steam_id(user_string)
+        if isinstance(user_string, str):
+            steam_ids[user_string] = convert_to_steam_id(user_string)
+        else:
+            steam_ids[user_string] = None
     return steam_ids
 
 
@@ -71,7 +74,6 @@ def create_user_games_list(steam_ids):
     """ Grabs list of multiplayer steam games for each valid user. """
 
     env = environ.Env()
-    environ.Env.read_env()
     web_api = WebAPI(env('STEAM_API_KEY'))
 
     users = OrderedDict()
@@ -86,8 +88,9 @@ def create_user_games_list(steam_ids):
             users[user_string] = {}
             for game in games['response']['games']:
                 appid = int(game['appid'])
-                db_entry = Game.objects.get(pk=appid)
-                if db_entry is None:
+                try:
+                    db_entry = Game.objects.get(pk=appid)
+                except Game.DoesNotExist as e:
                     db_entry = find_new_game(str(appid))
                     if db_entry is None:
                         continue
@@ -99,7 +102,7 @@ def create_user_games_list(steam_ids):
 def create_combinations(users):
     """ Creates intersection dicts of shared games. """
 
-    print("Intersecting lists")
+
     if len(users) < 2:
         return None
 
@@ -107,7 +110,6 @@ def create_combinations(users):
 
     # Generate tuples of combinations of users of all lengths.
     combinations_of_users = []
-    print(list(users.keys()))
     for i in range(2, len(users) + 1):
         combinations_of_users.extend(
             itertools.combinations(list(users.keys()), i))
@@ -202,9 +204,11 @@ def find_new_game(appid):
             game = Game(appid=int(appid), title=game_name)
             game.save()
         for key in game_tags:
-            tag = Tag.objects.get(name=key)
-            if tag:
+            try:
+                tag = Tag.objects.get(name=key)
                 game.tags.add(tag)
+            except Tag.DoesNotExist as e:
+                continue
         game.save()
         return game
     return None
