@@ -1,1 +1,11 @@
-{"status":"done","chunks":{"main":[{"name":"main-d73d2e642a85444234be.js","path":"C:\\Users\\wackm\\PycharmProjects\\steam_lan_game_finder\\assets\\bundles\\main-d73d2e642a85444234be.js"}]}}
+{
+  "status": "done",
+  "chunks": {
+    "main": [
+      {
+        "name": "main-094074603f9da7edba84.js",
+        "path": "C:\\Users\\wackm\\PycharmProjects\\steam_lan_game_finder\\assets\\bundles\\main-094074603f9da7edba84.js"
+      }
+    ]
+  }
+}

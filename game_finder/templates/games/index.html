@@ -1,5 +1,21 @@
 {% extends 'games/base.html' %}
 
 {% block content %}
-    <p>hi</p>
+    <div class="row">
+        <div class="col mt-5">
+            <form method="GET">
+                <div class="form-group">
+                    <label for="user_strings">Steam IDs</label>
+                    <input type="text" class="form-control" id="user_strings" aria-describedby="user_strings_help"
+                           placeholder="Enter comma seperated Steam IDs">
+                    <small id="user_strings_help" class="form-text text-muted">
+                        Input two or more steam64 IDs or custom urls separated by commas.
+                    </small>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    Find Multiplayer Games Common Between Accounts
+                </button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

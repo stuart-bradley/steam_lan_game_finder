@@ -13,12 +13,19 @@ module.exports = {
     },
 
     plugins: [
-        new BundleTracker({filename: './webpack-stats.json'})
+        new BundleTracker({filename: './webpack-stats.json'}),
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery',
+            Popper: ['popper.js', 'default']
+        })
     ],
 
     module: {
         loaders: [
-            {test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader'} // to transform JSX into JS
+            {test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader'}, // to transform JSX into JS
+            {test: /\.css$/, loader: "style-loader!css-loader"}
         ]
     },
 

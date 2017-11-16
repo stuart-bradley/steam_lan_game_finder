@@ -65,11 +65,17 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
 
+        "use strict";
+        Object.defineProperty(__webpack_exports__, "__esModule", {value: true});
+        throw new Error("Cannot find module \"bootstrap\"");
+        throw new Error("Cannot find module \"bootstrap/dist/css/bootstrap.min.css\"");
 /**
  * Created by wackm on 09-Nov-17.
  */
 
-/***/ })
+
+        /***/
+    })
 /******/ ]);
