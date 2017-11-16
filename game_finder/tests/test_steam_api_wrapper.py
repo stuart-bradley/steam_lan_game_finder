@@ -46,9 +46,10 @@ class SteamAPIWrapperTestCase(TestCase):
 
     def test_create_user_games_list(self):
         user_string = "darkstarone93"
+        persona_string = "Lutras Debtra_76561198011864860"
         steam_ids = convert_to_steam_ids([user_string])
         games_list = create_user_games_list(steam_ids)
-        self.assertIsInstance(next(iter(games_list[user_string].values())),
+        self.assertIsInstance(next(iter(games_list[persona_string].values())),
                               Game)
 
     def test_create_combinations(self):
@@ -60,3 +61,7 @@ class SteamAPIWrapperTestCase(TestCase):
         test_key = ("player_1", "player_2", "player_3")
         self.assertTrue(test_key in result.keys())
         self.assertEqual(result[test_key], {'1': 'game_1'})
+
+    def test_steam_api_wrapper(self):
+        result = create_combinations_from_user_input(self.user_strings_valid)
+        self.assertIsInstance(result, OrderedDict)

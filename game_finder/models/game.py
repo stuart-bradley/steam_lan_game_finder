@@ -8,3 +8,6 @@ class Game(models.Model):
     is_multiplayer = models.BooleanField(default=False)
     price = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     tags = models.ManyToManyField(Tag)
+
+    def __str__(self):
+        return self.title

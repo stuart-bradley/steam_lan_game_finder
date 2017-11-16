@@ -18,7 +18,18 @@ the next):
 1. convert_to_steam_ids
 2. create_user_games_list
 3. create_combinations
+
+All other methods feed into the above three, the whole system can be run via:
+create_combinations_from_user_input
 """
+
+
+def create_combinations_from_user_input(user_strings):
+    """ Runs whole module in one go. """
+    steam_ids = convert_to_steam_ids(user_strings)
+    users = create_user_games_list(steam_ids)
+    ordered_games_list = create_combinations(users)
+    return ordered_games_list
 
 """ Methods for handling Steam IDs. """
 
@@ -33,7 +44,12 @@ def convert_to_steam_ids(user_strings):
     steam_ids = OrderedDict()
     for user_string in user_strings:
         if isinstance(user_string, str):
-            steam_ids[user_string] = convert_to_steam_id(user_string)
+            steam_id = convert_to_steam_id(user_string)
+            persona_name = get_persona_name(steam_id)
+            if persona_name:
+                steam_ids[persona_name] = steam_id
+            else:
+                steam_ids[user_string] = steam_id
         else:
             steam_ids[user_string] = None
     return steam_ids
@@ -53,11 +69,28 @@ def convert_to_steam_id(user_string):
         return steam_id
     else:  # Failure can be due to vanity usernames.
         steam_id = convert_from_vanity_url_to_steam_id(user_string)
-        if steam_id is not None:
+        if steam_id:
             return steam_id
         else:
             return None
 
+
+def get_persona_name(steam_id):
+    """ Attempts to get persona name of steam user. """
+    if isinstance(steam_id, SteamID):
+        env = environ.Env()
+        web_api = WebAPI(env('STEAM_API_KEY'))
+
+        content = web_api.ISteamUser.GetPlayerSummaries(
+            steamids=steam_id.as_64)
+        try:
+            persona_name = content["response"]["players"][0]["personaname"]
+            return "_".join([persona_name, str(steam_id.as_64)])
+        except Exception as e:
+            print(e)
+            return None
+    else:
+        return None
 
 def convert_from_vanity_url_to_steam_id(user_string):
     """ Tries to create a SteamID object via the URL. """
@@ -195,20 +228,21 @@ def find_new_game(appid):
                 tag.save()
         # Creates Games.
         game_name = game_data["name"]
-        if len(game_multiplayer_tags) > 0:
-            price = get_price(appid)
-            game = Game(appid=int(appid), title=game_name, price=price,
-                        is_multiplayer=True)
+        if game_name:
+            if len(game_multiplayer_tags) > 0:
+                price = get_price(appid)
+                game = Game(appid=int(appid), title=game_name, price=price,
+                            is_multiplayer=True)
+                game.save()
+            else:
+                game = Game(appid=int(appid), title=game_name)
+                game.save()
+            for key in game_tags:
+                try:
+                    tag = Tag.objects.get(name=key)
+                    game.tags.add(tag)
+                except Tag.DoesNotExist as e:
+                    continue
             game.save()
-        else:
-            game = Game(appid=int(appid), title=game_name)
-            game.save()
-        for key in game_tags:
-            try:
-                tag = Tag.objects.get(name=key)
-                game.tags.add(tag)
-            except Tag.DoesNotExist as e:
-                continue
-        game.save()
-        return game
+            return game
     return None
