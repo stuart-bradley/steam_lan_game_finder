@@ -15,7 +15,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <form method="post">
+            <form method="post" onsubmit="show_spinner()">
                 {% csrf_token %}
                 <div class="form-group">
                     {% if form.user_strings.errors %}
@@ -51,8 +51,19 @@
                     Find Multiplayer Games Common Between Accounts
                 </button>
             </form>
+            <div class="row" id="spinner">
+                <div class="col">
+                    <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
         </div>
     </div>
+    <script>
+        function show_spinner() {
+            $('#spinner').show()
+        }
+    </script>
 
     {% if results %}
         <div class="row">

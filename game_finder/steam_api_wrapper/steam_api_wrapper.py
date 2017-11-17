@@ -179,8 +179,6 @@ def get_json_response(url):
         response.raise_for_status()
         return response.json()
     except Exception as e:
-        print("Skipping {}".format(url))
-        print(e)
         return None
 
 
@@ -250,8 +248,6 @@ def find_new_game(appid):
 
 def sort_ordered_games_list(ordered_games_lists):
     """ Reverses as sorts ordered games lists alphabetically """
-
-    print(ordered_games_lists)
 
     new_order = OrderedDict()
 

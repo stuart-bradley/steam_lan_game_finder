@@ -1,12 +1,13 @@
+{% load game_extras %}
 <div class="row ">
-    <div class="col-9 mx-auto">
-        <p>{{ key }}</p>
+    <div class="col-9 mx-auto text-center">
+        <h3>{{ key | prettify_name_tuple }}</h3>
         <table class="table">
             <thead>
             <tr>
                 <th scope="col" style="border-color:rgb(82, 87, 92)">App ID</th>
                 <th scope="col" style="border-color:rgb(82, 87, 92)">Title</th>
-                <th scope="col" style="border-color:rgb(82, 87, 92)">Price</th>
+                <th scope="col" style="border-color:rgb(82, 87, 92)">Price (Last Checked)</th>
             </tr>
             </thead>
             <tbody>
@@ -14,7 +15,7 @@
                 <tr>
                     <th scope="row" style="border-color:rgb(82, 87, 92)">{{ appid }}</th>
                     <td style="border-color:rgb(82, 87, 92)">{{ game.title }}</td>
-                    <td style="border-color:rgb(82, 87, 92)">{{ game.price }}</td>
+                    <td style="border-color:rgb(82, 87, 92)">{{ game.price | generate_price }} ({{ game.modified_date }})</td>
                 </tr>
             {% endfor %}
             </tbody>
