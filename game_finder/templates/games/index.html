@@ -3,10 +3,12 @@
 {% block content %}
     <div class="row">
         <div class="col mt-5">
-            <form method="GET">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
                 <div class="form-group">
-                    <input type="text" class="form-control" id="user_strings" aria-describedby="user_strings_help"
-                           placeholder="Enter comma seperated Steam IDs">
+                    {{ form.user_strings.errors }}
+                    {{ form.user_strings }}
                     <small id="user_strings_help" class="form-text text-muted">
                         Input two or more steam IDs in any format separated by commas, e.g:
                         <ul>
@@ -33,4 +35,12 @@
             </form>
         </div>
     </div>
+
+    {% if results %}
+        <div class="row">
+            <div class="col">
+                <hr/>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
