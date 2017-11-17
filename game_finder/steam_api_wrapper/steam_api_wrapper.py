@@ -7,6 +7,7 @@ from decimal import Decimal
 from time import sleep
 from game_finder.models import Game, Tag
 import itertools
+from operator import itemgetter
 
 """
 This is the Steam API Wrapper module. It's purpose is to parse user input into
@@ -129,6 +130,7 @@ def create_user_games_list(steam_ids):
                         continue
                 if db_entry.is_multiplayer:
                     users[user_string][str(game['appid'])] = db_entry
+
     return users
 
 
@@ -147,9 +149,6 @@ def create_combinations(users):
         combinations_of_users.extend(
             itertools.combinations(list(users.keys()), i))
 
-    if len(combinations_of_users) < 2:
-       return None
-
     # Perform intersection.
     for combin in combinations_of_users:
         if len(combin) == 2:
@@ -167,6 +166,8 @@ def create_combinations(users):
                                            ordered_games_lists[combin[0:len(
                                                combin) - 1]].items() if
                                            k in intersect}
+
+    ordered_games_lists = sort_ordered_games_list(ordered_games_lists)
 
     return ordered_games_lists
 
@@ -246,3 +247,17 @@ def find_new_game(appid):
             game.save()
             return game
     return None
+
+
+def sort_ordered_games_list(ordered_games_lists):
+    """ Reverses as sorts ordered games lists alphabetically """
+
+    print(ordered_games_lists)
+
+    new_order = OrderedDict()
+
+    for group, games in reversed(ordered_games_lists.items()):
+        new_order[group] = OrderedDict(
+            sorted(games.items(), key=lambda x: x[1].title))
+
+    return new_order

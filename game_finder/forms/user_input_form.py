@@ -14,7 +14,7 @@ class UserInputForm(forms.Form):
 
     def clean_user_strings(self):
         data = self.cleaned_data['user_strings']
-        data = list(filter(None, data.split(",")))
+        data = list(map(str.strip, filter(None, data.split(","))))
         if len(data) < 2:
             raise ValidationError(
                 _('Could not split input into two or more Steam IDs')
