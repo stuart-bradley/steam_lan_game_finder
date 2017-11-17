@@ -25,7 +25,7 @@ def index_helper(results, form):
     for key, value in steam_ids.items():
         if value is None:
             form.add_error(None,
-                           "Could not convert {} to a Steam ID".format(key))
+                           "Could not convert '{}' to a Steam ID".format(key))
             return None, form
 
     users = steam_api.create_user_games_list(steam_ids)

@@ -4,9 +4,19 @@
 {% block content %}
     <div class="row">
         <div class="col mt-5">
+            {% if form.errors %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             <form method="post">
                 {% csrf_token %}
-                {{ form.non_field_errors }}
                 <div class="form-group">
                     {% if form.user_strings.errors %}
                         {{ form.user_strings | add_class:"form-control is-invalid" }}

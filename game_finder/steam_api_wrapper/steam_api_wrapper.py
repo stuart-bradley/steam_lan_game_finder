@@ -7,7 +7,6 @@ from decimal import Decimal
 from time import sleep
 from game_finder.models import Game, Tag
 import itertools
-from operator import itemgetter
 
 """
 This is the Steam API Wrapper module. It's purpose is to parse user input into
