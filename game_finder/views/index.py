@@ -5,7 +5,6 @@ from game_finder.forms.user_input_form import UserInputForm
 
 def index(request):
     results = None
-    errors = None
 
     if request.method == 'POST':
         form = UserInputForm(request.POST)
@@ -17,5 +16,4 @@ def index(request):
     return render(request, 'games/index.html', {
         'form': form,
         'results': results,
-        'errors': errors,
     })

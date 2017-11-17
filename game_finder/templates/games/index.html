@@ -1,4 +1,5 @@
 {% extends 'games/base.html' %}
+{% load game_extras %}
 
 {% block content %}
     <div class="row">
@@ -7,8 +8,14 @@
                 {% csrf_token %}
                 {{ form.non_field_errors }}
                 <div class="form-group">
-                    {{ form.user_strings.errors }}
-                    {{ form.user_strings }}
+                    {% if form.user_strings.errors %}
+                        {{ form.user_strings | add_class:"form-control is-invalid" }}
+                    {% else %}
+                        {{ form.user_strings }}
+                    {% endif %}
+                    <div class="invalid-feedback">
+                        Could not separate input in two or more strings.
+                    </div>
                     <small id="user_strings_help" class="form-text text-muted">
                         Input two or more steam IDs in any format separated by commas, e.g:
                         <ul>
