@@ -10,12 +10,13 @@
                 <div class="form-group">
                     {% if form.user_strings.errors %}
                         {{ form.user_strings | add_class:"form-control is-invalid" }}
+                        <div class="invalid-feedback mt-2">
+                            {{ form.user_strings.errors.as_text |slice:"1:" }}
+                        </div>
+                        <hr style="background-color:rgb(238, 95, 91)"/>
                     {% else %}
                         {{ form.user_strings }}
                     {% endif %}
-                    <div class="invalid-feedback">
-                        Could not separate input in two or more strings.
-                    </div>
                     <small id="user_strings_help" class="form-text text-muted">
                         Input two or more steam IDs in any format separated by commas, e.g:
                         <ul>
@@ -45,8 +46,30 @@
 
     {% if results %}
         <div class="row">
-            <div class="col">
-                <hr/>
+            <div class="col mt-4">
+                <div id="carouselSteam" class="carousel slide" data-interval="false">
+                    <div class="carousel-inner">
+                        {% for key, value in results.items %}
+                            {% if forloop.counter == 1 %}
+                                <div class="carousel-item active">
+                                    {% include "games/result_table.html" with key=key value=value %}
+                                </div>
+                            {% else %}
+                                <div class="carousel-item">
+                                    {% include "games/result_table.html" with key=key value=value %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselSteam" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselSteam" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
             </div>
         </div>
     {% endif %}

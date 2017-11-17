@@ -14,9 +14,14 @@ class UserInputForm(forms.Form):
 
     def clean_user_strings(self):
         data = self.cleaned_data['user_strings']
-        data = data.split(",")
+        data = list(filter(None, data.split(",")))
         if len(data) < 2:
-            print("ERROR")
             raise ValidationError(
-                _('Could not split input into two or more Steam IDs'))
+                _('Could not split input into two or more Steam IDs')
+            )
+
+        if len(data) > len(set(data)):
+            raise ValidationError(
+                _('Two or more inputs are identical')
+            )
         return data

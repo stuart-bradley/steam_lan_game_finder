@@ -10,6 +10,7 @@ def index(request):
         form = UserInputForm(request.POST)
         if form.is_valid():
             results = form.cleaned_data['user_strings']
+            results = dict((el, 0) for el in results)
     else:
         form = UserInputForm()
 
