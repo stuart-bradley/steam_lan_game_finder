@@ -47,7 +47,7 @@
                         </ul>
                     </small>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">
+                <button type="submit" class="btn btn-primary btn-block btn-lg" id="form_submit">
                     Find Multiplayer Games Common Between Accounts
                 </button>
             </form>
@@ -55,6 +55,9 @@
     </div>
 
     {% if results %}
+        <script>
+            reset_submit();
+        </script>
         <div class="row">
             <div class="col mt-4">
                 <div id="carouselSteam" class="carousel slide" data-interval="false">
