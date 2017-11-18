@@ -4,6 +4,16 @@
 {% block content %}
     <div class="row">
         <div class="col mt-5">
+            <div class="jumbotron">
+                <div class="container">
+                    <h1 class="display-3">Steam Game List Intersector</h1>
+                    <p class="lead">Intersect multiple Steam user libraries to find common multiplayer games</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             {% if form.errors %}
                 {% for error in form.non_field_errors %}
                     <div class="alert alert-danger">
