@@ -17316,7 +17316,7 @@
 
 
 // module
-        exports.push([module.i, ".table > thead > tr > th {\r\n    border-color: rgb(82, 87, 92)\r\n}", ""]);
+        exports.push([module.i, ".table > thead > tr > th {\r\n    border-color: rgb(82, 87, 92)\r\n}\r\n\r\n.carousel-control-prev,\r\n.carousel-control-next{\r\n      bottom: 90%;\r\n}", ""]);
 
 // exports
 
@@ -17329,9 +17329,10 @@
         /* WEBPACK VAR INJECTION */
         (function ($) {
             /**
-             * Created by wackm on 18-Nov-17.
+             * Click functions for buttons.
              */
             $(document).ready(function (e) {
+                // Puts a spinner on the submit button when clicked.
                 $("#form_submit").click(function () {
                     if ($('#id_user_strings').val() != "") {
                         var spinner_html = $('<i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i> <span class="sr-only">Loading...</span>');
@@ -17341,6 +17342,7 @@
                     }
                 });
 
+                // AJAX query for getting updated price values.
                 $(document).on('click', '.price-update', function (e) {
                     var price_button = $(e.target);
                     var parent_td = $(price_button.parent().parent());
@@ -17352,14 +17354,17 @@
                             'appid': appid.text()
                         },
                         dataType: 'json',
+                        // Sets the animation going.
                         beforeSend: function () {
                             price_button.addClass('fa-spin');
                         },
                         success: function (result) {
                             if (result['price']) {
+                                // Replaces are used because the internal HTML is quite complex (includes the button).
                                 td_html = td_html.replace(/\$\d*\.\d*/g, result['price']);
                                 td_html = td_html.replace(/Free/g, result['price']);
                                 td_html = td_html.replace(/\d*-\d*-\d*/g, result['modified_date']);
+                                // removeClass didn't work correctly, so regex replace is used instead.
                                 td_html = td_html.replace(/fa-spin/g, '');
                                 parent_td.html(td_html);
                             } else {

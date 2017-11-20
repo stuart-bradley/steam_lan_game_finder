@@ -72,5 +72,5 @@ Since Webpack build commands can be a bit verbose, the following yarn scripts ca
 ```
  "build": "webpack --config webpack.base.config.js --progress --colors",
  "build-production": "webpack --config webpack.prod.config.js --progress --colors",
- "watch": "node server.js"
+ "watch": "webpack --config webpack.base.config.js --watch --progress --colors"
 ```
