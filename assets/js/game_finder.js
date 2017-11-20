@@ -42,6 +42,5 @@ $(document).ready(function (e) {
                 price_button.removeClass('fa-spin');
             }
         });
-        console.log("5", price_button.attr('class'));
     });
 });
