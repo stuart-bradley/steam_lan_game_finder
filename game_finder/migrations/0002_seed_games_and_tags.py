@@ -12,6 +12,8 @@ class Migration(migrations.Migration):
     def forward(apps, schema_editor):
         """ Generates Game and Tag entities from the SteamSpy
         and SteamStore APIs.
+
+        Takes a long time. Testing should use --keepdb flag.
         """
         print()
 

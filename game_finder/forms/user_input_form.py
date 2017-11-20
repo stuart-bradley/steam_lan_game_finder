@@ -13,7 +13,9 @@ class UserInputForm(forms.Form):
     )
 
     def clean_user_strings(self):
+        """ Overrides base method, checks data before processing. """
         data = self.cleaned_data['user_strings']
+        # Removes empty strings and extra whitespace.
         data = list(map(str.strip, filter(None, data.split(","))))
         if len(data) < 2:
             raise ValidationError(

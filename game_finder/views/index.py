@@ -9,6 +9,7 @@ from django.template.defaultfilters import date
 
 
 def index(request):
+    """ Main view, handles form processing. """
     results = None
 
     if request.method == 'POST':
@@ -26,6 +27,7 @@ def index(request):
 
 
 def update_price(request):
+    """ AJAX request for getting proce data. """
     if request.is_ajax():
         appid = request.GET.get('appid', None)
         new_price = steam_api.get_price(appid)
@@ -48,6 +50,10 @@ def update_price(request):
                 })
 
 def index_helper(results, form):
+    """ Index request helper which interacts with the Steam API Wrapper
+        to do the various stages of processing and produce errors if
+        needed.
+    """
     steam_ids = steam_api.convert_to_steam_ids(results)
     for key, value in steam_ids.items():
         if value is None:
