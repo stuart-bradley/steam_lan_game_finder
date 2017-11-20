@@ -10,7 +10,7 @@ into steam.
 
 ## Screenshot
 
-![Index_View](https://raw.github.com/lutrasdebtra/steam_lan_game_finder/screenshots/index_view.png)
+![Index_View](https://raw.github.com/lutrasdebtra/master/steam_lan_game_finder/screenshots/index_view.png)
 
 ## Usage
 
