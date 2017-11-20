@@ -11,9 +11,10 @@ $(document).ready(function (e) {
         }
     });
 
-    $(".price-update").click(function (e) {
+    $(document).on('click', '.price-update', function (e) {
         var price_button = $(e.target);
         var parent_td = $(price_button.parent().parent());
+        var td_html = parent_td.html();
         var appid = $(parent_td.parent().children().first());
         $.ajax({
             url: '/ajax/update_price/',
@@ -26,20 +27,19 @@ $(document).ready(function (e) {
             },
             success: function (result) {
                 if (result['price']) {
-                    var td_html = parent_td.html();
                     td_html = td_html.replace(/\$\d*\.\d*/g, result['price']);
                     td_html = td_html.replace(/Free/g, result['price']);
                     td_html = td_html.replace(/\d*-\d*-\d*/g, result['modified_date']);
+                    td_html = td_html.replace(/fa-spin/g, '');
                     parent_td.html(td_html);
                 } else {
+                    td_html = td_html.replace(/fa-spin/g, '');
+                    parent_td.html(td_html);
                     alert(result['error']);
                 }
             },
             error: function (xhr, textStatus, error) {
                 console.log(error);
-            },
-            complete: function () {
-                price_button.removeClass('fa-spin');
             }
         });
     });
