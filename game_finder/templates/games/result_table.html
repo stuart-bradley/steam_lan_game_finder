@@ -16,7 +16,7 @@
                     <th>{{ appid }}</th>
                     <td>{{ game.title }}</td>
                     <td>
-                        {{ game.price | generate_price }} ({{ game.modified_date }})
+                        {{ game.price | generate_price }} ({{ game.modified_date | date:'Y-m-d' }})
                         <a href="javascript:void(0);" class="price-update">
                             <i class="fa fa-refresh fa-1x fa-fw" style="color: rgb(62, 121, 153);"></i>
                             <span class="sr-only">Loading...</span>
