@@ -80,7 +80,7 @@ Since Webpack build commands can be a bit verbose, the following yarn scripts ca
 
 [`SteamLanGameFinder.py`](https://github.com/lutrasdebtra/steam_lan_game_finder/blob/master/standalone/SteamLanGameFinder.py)
 is the original script which does not require the full web interface. To use it by itself the requirements are:
-[Python](https://www.python.org/) (v3.*).
+* [Python](https://www.python.org/) (v3.*).
     * [steam](https://pypi.python.org/pypi/steam) (v0.8.22).
     * [requests](http://docs.python-requests.org/en/master/) (v2.18.4).
     
