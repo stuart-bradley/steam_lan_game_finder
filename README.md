@@ -10,7 +10,7 @@ into steam.
 
 ## Screenshot
 
-![Index_View](index_view.png)
+![Index_View](index_view2.png)
 
 ## Usage
 
