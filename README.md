@@ -28,6 +28,7 @@ The app itself is fairly simple, and runs on a small number of technologies:
 * [Python](https://www.python.org/) (v3.6.3) - Backend.
     * [Django](https://www.djangoproject.com/) (v1.11).
     * [steam](https://pypi.python.org/pypi/steam) (v0.8.22) - (Python package that does the Steam API calls).
+    * [requests](http://docs.python-requests.org/en/master/) (v2.18.4) - (Python package that handles non-Steam API calls).
     * [Django-environ](https://github.com/joke2k/django-environ) (v0.4.4) - (Python package for storing ENV variables).
 * [Yarn](https://yarnpkg.com/en/) (v1.3.2) - Package management.
     * [Jquery](https://jquery.com/) (v3.2.1).
@@ -74,3 +75,17 @@ Since Webpack build commands can be a bit verbose, the following yarn scripts ca
  "build-production": "webpack --config webpack.prod.config.js --progress --colors",
  "watch": "webpack --config webpack.base.config.js --watch --progress --colors"
 ```
+
+## Running As A Standalone Script
+
+[`SteamLanGameFinder.py`](https://github.com/lutrasdebtra/steam_lan_game_finder/blob/master/standalone/SteamLanGameFinder.py)
+is the original script which does not require the full web interface. To use it by itself the requirements are:
+[Python](https://www.python.org/) (v3.*).
+    * [steam](https://pypi.python.org/pypi/steam) (v0.8.22).
+    * [requests](http://docs.python-requests.org/en/master/) (v2.18.4).
+    
+To use the file, line 19 must be updated with the API key, which can be procured from [here](https://steamcommunity.com/dev/apikey).
+Once that is done the class can be initialised with a list of Steam IDs, which will return an `OrderedDict` of intersects
+in the same format as the main web application uses. Keep in mind these are not formatted nicely, and may require some
+post-processing. 
+ 
