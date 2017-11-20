@@ -8785,3 +8785,5 @@ Not Found: /favicon.ico
 (0.000) SELECT `game_finder_game`.`appid`, `game_finder_game`.`title`, `game_finder_game`.`is_multiplayer`, `game_finder_game`.`price`, `game_finder_game`.`created_date`, `game_finder_game`.`modified_date` FROM `game_finder_game` WHERE `game_finder_game`.`appid` = 570; args=(570,)
 (0.000) SELECT `game_finder_game`.`appid`, `game_finder_game`.`title`, `game_finder_game`.`is_multiplayer`, `game_finder_game`.`price`, `game_finder_game`.`created_date`, `game_finder_game`.`modified_date` FROM `game_finder_game` WHERE `game_finder_game`.`appid` = 630; args=(630,)
 "POST / HTTP/1.1" 200 258834
+(0.001) SELECT @@SQL_AUTO_IS_NULL; args=None
+(0.001) SELECT VERSION(); args=None
