@@ -88,4 +88,7 @@ To use the file, line 19 must be updated with the API key, which can be procured
 Once that is done the class can be initialised with a list of Steam IDs, which will return an `OrderedDict` of intersects
 in the same format as the main web application uses. Keep in mind these are not formatted nicely, and may require some
 post-processing. 
+
+Additionally, the standalone script does not handle price information, or converting Steam IDs to aliases. These tasks are
+avoided purely to keep the script fast (as it builds the database everytime it gets run).
  
