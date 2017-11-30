@@ -5,15 +5,19 @@ from __future__ import unicode_literals
 from django.db import migrations
 from game_finder.steam_api_wrapper.steam_api_wrapper import (get_json_response,
 get_price)
-
+from sys import path
+from django.core import serializers
+import os
+from time import sleep
 
 class Migration(migrations.Migration):
-
-    def forward(apps, schema_editor):
+    def api_mode(apps, schema_editor, fixture_file):
         """ Generates Game and Tag entities from the SteamSpy
-        and SteamStore APIs.
+            and SteamStore APIs.
 
-        Takes a long time. Testing should use --keepdb flag.
+            Takes a long time. Testing should use --keepdb flag.
+
+            Also creates a yaml fixtures file for easier reloading.
         """
         print()
 
@@ -22,45 +26,82 @@ class Migration(migrations.Migration):
         multiplayer_tags = {'Multiplayer', 'Local Multiplayer',
                             'Co-Op', 'Co-op',
                             'Online Co-Op', 'Local Co-Op',
-                            'Massively Multiplayer'}
+                            'Massively Multiplayer', 'Multi-player'}
         all_tags = {}
+        tag_objects = []
+        game_objects = []
 
         print("Generating Games and Tags.")
-        content = get_json_response("https://steamspy.com/api.php?request=all")
+        content = get_json_response(
+            "https://steamspy.com/api.php?request=all")
 
         if content:
             items_len = len(content.keys())
             counter = 0
-            for appid, game_data in content.items():
+            for appid in content.keys():
+                sleep(1)
+                game_data = get_json_response(
+                    "https://steamspy.com/api.php?request=appdetails&appid={}".format(
+                        appid))
                 counter += 1
                 game_tags = []
                 game_multiplayer_tags = []
-                if game_data['tags']:
-                    game_tags = game_data['tags'].keys()
-                    game_multiplayer_tags = game_tags & multiplayer_tags
-                    missing_tags = game_tags - all_tags.keys()
-                    # Creates tags as needed.
-                    for item in missing_tags:
-                        print("Creating Tag: {}".format(item))
-                        if item in multiplayer_tags:
-                            tag = Tag(name=item, is_multiplayer=True)
-                        else:
-                            tag = Tag(name=item)
-                        tag.save()
-                        all_tags[item] = tag
-                # Creates Games.
-                game_name = game_data["name"]
-                print("Creating Game: {} ({}/{})".format(game_name, counter, items_len))
-                if len(game_multiplayer_tags) > 0:
-                    price = get_price(appid)
-                    game = Game(appid=int(appid),title=game_name,price=price, is_multiplayer=True)
+                if game_data:
+                    if game_data['tags']:
+                        game_tags = game_data['tags'].keys()
+                        game_multiplayer_tags = game_tags & multiplayer_tags
+                        missing_tags = game_tags - all_tags.keys()
+                        # Creates tags as needed.
+                        for item in missing_tags:
+                            print("Creating Tag: {}".format(item))
+                            if item in multiplayer_tags:
+                                tag = Tag(name=item, is_multiplayer=True)
+                            else:
+                                tag = Tag(name=item)
+                            tag.save()
+                            all_tags[item] = tag
+                            tag_objects.append(tag)
+                    # Creates Games.
+                    game_name = game_data["name"]
+                    print(
+                        "Creating Game: {} ({}/{})".format(game_name, counter,
+                                                           items_len))
+                    if len(game_multiplayer_tags) > 0:
+                        price = get_price(appid)
+                        game = Game(appid=int(appid), title=game_name,
+                                    price=price, is_multiplayer=True)
+                        game.save()
+                    else:
+                        game = Game(appid=int(appid), title=game_name)
+                        game.save()
+                    for key in game_tags:
+                        game.tags.add(all_tags[key])
                     game.save()
-                else:
-                    game = Game(appid=int(appid), title=game_name)
-                    game.save()
-                for key in game_tags:
-                    game.tags.add(all_tags[key])
-                game.save()
+                    game_objects.append(game)
+
+            # Write a fixtures file.
+            fixture = open(fixture_file, 'w')
+            objects_yaml = serializers.serialize('yaml', tag_objects +
+                                                 game_objects)
+            fixture.write(objects_yaml)
+            fixture.close()
+
+    def fixture_mode(apps, schema_editor, fixture_file):
+        """ Generates database from default fixture. """
+        fixture = open(fixture_file, 'rb')
+        objects = serializers.deserialize('yaml', fixture,
+                                          ignorenonexistent=True)
+        for obj in objects:
+            obj.save()
+        fixture.close()
+
+    def forward(apps, schema_editor):
+        fixture_dir = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), '../fixtures'))
+        fixture_filename = 'initial_data.yaml'
+        fixture_file = os.path.join(fixture_dir, fixture_filename)
+        # apps.api_mode(schema_editor, fixture_file)
+        apps.fixture_mode(schema_editor, fixture_file)
 
 
     def backward(apps, schema_editor):

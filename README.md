@@ -57,14 +57,17 @@ STEAM_API_KEY=
 ### Migration Notes
 
 The second migration file ([`migrations/0002_seed_games_and_tags.py`](https://github.com/lutrasdebtra/steam_lan_game_finder/blob/master/game_finder/migrations/0002_seed_games_and_tags.py))
-populates the database through a large number of API calls. A single call gets a list of all Steam Games from 
-[steamspy.com](https://steamspy.com/about), after which the Steam Store API is called approximately sixteen thousand 
-times (with one second between calls to avoid DDoS protection) to get initial pricing information. 
+has two modes of operation. Controlled by commenting and uncommenting lines 104 and 105. The first mode (and the default) 
+loads a fixture file called `fixtures/initial_data.yaml`, which is a copy of the database produced by the second method 
+on 2017-11-30.
 
-This can take a few hours, so when testing it is **heavily** recommended that the `--keepdb` tag be used.
-  
-Alternatively, the file could be modified to just set all prices to `Decimal('-1.0')`, which displays as `??`, and users 
-can AJAX update the database over time. This will not impact the test suite in any way. 
+The second method uses a large number of API calls. A single call gets a list of all Steam Games from 
+[steamspy.com](https://steamspy.com/about), after which the SteamSpy and Steam Store APIs are called approximately 
+thirty two thousand times (with one second between calls to avoid DDoS protection) to get initial tag and pricing 
+information. This method also replaces `initial_data.yaml` with new data.
+
+This can take a few hours, so when testing it is **heavily** recommended that the `--keepdb` tag be used 
+(if this mode is set).
 
 ### Yarn Build Scripts
 
