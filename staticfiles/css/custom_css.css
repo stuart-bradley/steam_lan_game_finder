@@ -1,0 +1,8 @@
+.table > thead > tr > th {
+    border-color: rgb(82, 87, 92)
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    bottom: 90%;
+}
