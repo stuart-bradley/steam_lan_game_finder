@@ -101,7 +101,7 @@ class Migration(migrations.Migration):
             os.path.join(os.path.dirname(__file__), '../fixtures'))
         fixture_filename = 'initial_data.yaml'
         fixture_file = os.path.join(fixture_dir, fixture_filename)
-        # apps.api_mode(apps, schema_editor, fixture_file)
+        # api_mode(apps, schema_editor, fixture_file)
         fixture_mode(apps, schema_editor, fixture_file)
 
 
