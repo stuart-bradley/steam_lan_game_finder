@@ -95,7 +95,6 @@ class Migration(migrations.Migration):
             objects = serializers.deserialize('yaml', fixture,
                                               ignorenonexistent=True)
             for obj in objects:
-                obj.created_date = django.utils.timezone.now
                 obj.save()
             fixture.close()
 
