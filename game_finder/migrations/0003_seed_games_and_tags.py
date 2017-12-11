@@ -9,6 +9,7 @@ from sys import path
 from django.core import serializers
 import os
 from time import sleep
+import django.utils.timezone
 
 class Migration(migrations.Migration):
     def forward(apps, schema_editor):
@@ -94,6 +95,7 @@ class Migration(migrations.Migration):
             objects = serializers.deserialize('yaml', fixture,
                                               ignorenonexistent=True)
             for obj in objects:
+                obj.created_date = django.utils.timezone.now
                 obj.save()
             fixture.close()
 
