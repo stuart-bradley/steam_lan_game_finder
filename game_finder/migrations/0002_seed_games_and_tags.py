@@ -117,7 +117,7 @@ class Migration(migrations.Migration):
             game.delete()
 
     dependencies = [
-        ('game_finder', '0001_initial'),
+        ('game_finder', '0002_auto_20171117_1833'),
     ]
 
     operations = [

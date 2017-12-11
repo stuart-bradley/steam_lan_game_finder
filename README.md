@@ -31,7 +31,6 @@ The app itself is fairly simple, and runs on a small number of technologies:
     * [requests](http://docs.python-requests.org/en/master/) (v2.18.4) - (Python package that handles non-Steam API calls).
     * [Django-environ](https://github.com/joke2k/django-environ) (v0.4.4) - (Python package for storing ENV variables).
     * [django-webpack-loader](https://github.com/ezhome/django-webpack-loader/releases) (v0.5.0) - (Python package for webpack).
-    * [mysqlclient](https://github.com/PyMySQL/mysqlclient-python) (v1.3.8)  - (Python package for mysql). 
 * [Yarn](https://yarnpkg.com/en/) (v1.3.2) - Package management.
     * [Jquery](https://jquery.com/) (v3.2.1).
 * [Webpack](https://webpack.js.org/) (v3.8.1) - Package management.

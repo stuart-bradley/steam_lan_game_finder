@@ -8,7 +8,7 @@ import django.utils.timezone
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('game_finder', '0002_seed_games_and_tags'),
+        ('game_finder', '0001_initial'),
     ]
 
     operations = [
