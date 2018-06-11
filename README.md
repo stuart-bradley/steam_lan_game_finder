@@ -1,5 +1,11 @@
 # Steam Game List Intersector
 
+## Disclaimer
+
+Due to changes to the Steam API, SteamSpy no longer works in the same way it used to, and this piece of software is unlikely to work as intended (since users' libraries are now hidden by default)
+
+## Introduction
+
 The Steam Game List Intersector is a web app that uses the Steam API to find multiplayer games that users have in common.
 The idea is that due to the burgeoning size of Steam libraries (mine is 500+ games), it can be hard to quickly work out
 which games everyone has in common. 
